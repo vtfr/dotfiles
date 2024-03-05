@@ -73,8 +73,14 @@ return {
         end
     },
 
-    -- -------------------------------------------------------------------------
     -- Comment code using "gc"
-    -- -------------------------------------------------------------------------
     { 'numToStr/Comment.nvim', opts = {} },
+
+    -- Surround text
+    --{
+    --    "kylechui/nvim-surround",
+    --    version = "main",
+    --    event = "VeryLazy",
+    --    opts = {}
+    --}
 }
