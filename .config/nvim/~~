@@ -1,0 +1,12 @@
+~/dotfiles/.config/nvim/..
+  ✗ ★ lua
+    config
+    ✗ ★ plugins
+       ✗ editor.lua
+       lsp.lua
+       ✗ theme.lua
+       ★ ui.lua
+    vtfr
+   ★ .luarc.json
+   init.lua
+   ✗ lazy-lock.json

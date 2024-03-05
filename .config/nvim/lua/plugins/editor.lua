@@ -1,5 +1,7 @@
 return {
+    -- -------------------------------------------------------------------------
     -- File search
+    -- -------------------------------------------------------------------------
     {
         'nvim-telescope/telescope.nvim',
         event = 'VimEnter',
@@ -45,21 +47,10 @@ return {
             }
         end
     },
-    {
-        'nvim-tree/nvim-tree.lua',
-        lazy = false,
-        config = true,
-        dependencies = {
-            'nvim-tree/nvim-web-devicons',
-        },
-        keys = {
-            { '<leader>tt', '<cmd>NvimTreeToggle<CR>',  desc = '[T]oggle [T]ree' },
-            { '<leader>tf', '<cmd>NvimTreeFocus<CR>',   desc = '[T]ree [F]ocus', },
-            { '<leader>tr', '<cmd>NvimTreeRefresh<CR>', desc = '[T]ree [R]efresh' },
-        },
-    },
 
+    -- -------------------------------------------------------------------------
     -- Tree Sitter
+    -- -------------------------------------------------------------------------
     {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
@@ -82,65 +73,8 @@ return {
         end
     },
 
-    -- Status-line
-    {
-        'nvim-lualine/lualine.nvim',
-        dependencies = { 'nvim-tree/nvim-web-devicons' },
-        opts = {
-            extensions = {
-                'lazy',
-            },
-            options = {
-                section_separators = { left = '', right = '' },
-                component_separators = { left = '', right = '' },
-                globalstatus = true,
-            }
-        }
-    },
-
-    -- Floating file name
-    {
-        'b0o/incline.nvim',
-        opts = {
-            window = {
-                padding = 0,
-                margin = {
-                    horizontal = 0,
-                    vertical = 0,
-                },
-            },
-            render = function(props)
-                local dev_icons = require('nvim-web-devicons')
-
-                local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
-                if filename == '' then
-                    filename = '[No Name]'
-                end
-
-                local ft_icon, _ = dev_icons.get_icon_color(filename)
-                local modified = vim.bo[props.buf].modified
-
-                return {
-                    ft_icon and { ' ', ft_icon } or '',
-                    ' ',
-                    { filename, gui = modified and 'italic' or '' },
-                    ' ',
-                }
-            end,
-        },
-    },
-
-    -- Command suggestions
-    {
-        "folke/which-key.nvim",
-        event = "VeryLazy",
-        init = function()
-            vim.o.timeout = true
-            vim.o.timeoutlen = 1000
-        end,
-        config = true,
-    },
-
+    -- -------------------------------------------------------------------------
     -- Comment code using "gc"
+    -- -------------------------------------------------------------------------
     { 'numToStr/Comment.nvim', opts = {} },
 }

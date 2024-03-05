@@ -1,14 +1,7 @@
 return {
-    -- Manson
-    { 'williamboman/mason.nvim', config = true },
-    {
-        'williamboman/mason-lspconfig.nvim',
-        dependencies = {
-            'williamboman/mason.nvim',
-        },
-    },
-
+    -- -------------------------------------------------------------------------
     -- LSP
+    -- -------------------------------------------------------------------------
     {
         'VonHeikemen/lsp-zero.nvim',
         branch = 'v3.x',
@@ -23,9 +16,7 @@ return {
                     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc })
                 end
 
-                -- ============================================================
                 -- Telescope integration
-                -- ============================================================
                 local telescope = require('telescope.builtin')
 
                 map('gd', telescope.lsp_definitions, '[G]oto [D]efinition')
@@ -35,17 +26,13 @@ return {
                 map('<leader>ds', telescope.lsp_document_symbols, '[D]ocument [S]ymbols')
                 map('<leader>ws', telescope.lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
-                -- ============================================================
                 -- Autoformat
-                -- ============================================================
                 map('<leader>f', function()
                     vim.lsp.buf.format({ async = false })
                 end, '[F]ormat file')
             end)
 
-            -- ================================================================
             -- Mason configuration
-            -- ================================================================
             require('mason').setup({})
             require('mason-lspconfig').setup({
                 ensure_installed = {
@@ -72,7 +59,9 @@ return {
         },
     },
 
+    -- -------------------------------------------------------------------------
     -- Auto-completion
+    -- -------------------------------------------------------------------------
     {
         'hrsh7th/nvim-cmp',
         config = function()
