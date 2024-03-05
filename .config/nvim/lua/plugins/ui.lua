@@ -100,4 +100,20 @@ return {
             { '<leader>tr', '<cmd>NvimTreeRefresh<CR>', desc = '[T]ree [R]efresh' },
         },
     },
+
+    -- -------------------------------------------------------------------------
+    -- Notifications
+    -- -------------------------------------------------------------------------
+    {
+        'rcarriga/nvim-notify',
+        config = function()
+            require('notify').setup({
+                render = 'wrapped-compact',
+                top_down = false,
+                stages = 'slide',
+            })
+
+            vim.notify = require('notify')
+        end
+    }
 }

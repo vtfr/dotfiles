@@ -1,15 +1,37 @@
 return {
     -- -------------------------------------------------------------------------
+    -- Autocompletion
+    -- -------------------------------------------------------------------------
+    {
+        'hrsh7th/nvim-cmp',
+        dependencies = {
+            { 'L3MON4D3/LuaSnip' },
+        },
+    },
+
+    -- -------------------------------------------------------------------------
+    -- LSP support
+    -- -------------------------------------------------------------------------
+    {
+        'neovim/nvim-lspconfig',
+        dependencies = {
+            { 'hrsh7th/cmp-nvim-lsp' },
+        },
+    },
+
+    -- -------------------------------------------------------------------------
     -- LSP
     -- -------------------------------------------------------------------------
     {
         'VonHeikemen/lsp-zero.nvim',
         branch = 'v3.x',
         lazy = true,
-        config = function()
+        config = false,
+        init = function()
             local lsp_zero = require('lsp-zero')
 
             lsp_zero.on_attach(function(_, bufnr)
+                -- Default keymaps
                 lsp_zero.default_keymaps({ buffer = bufnr })
 
                 local function map(keys, func, desc)
@@ -45,47 +67,11 @@ return {
                     lsp_zero.default_setup,
                 },
             })
-        end,
-        dependencies = {
-            -- LSP support
-            { 'neovim/nvim-lspconfig' },
 
-            -- Telescope support
-            { 'nvim-telescope/telescope.nvim' },
-
-            -- Manson managament of LSP servers and configs
-            { 'williamboman/mason.nvim' },
-            { 'williamboman/mason-lspconfig.nvim' },
-        },
-    },
-
-    -- -------------------------------------------------------------------------
-    -- Auto-completion
-    -- -------------------------------------------------------------------------
-    {
-        'hrsh7th/nvim-cmp',
-        config = function()
             local cmp = require('cmp')
-            local cmp_action = require('lsp-zero').cmp_action()
+            local cmp_action = lsp_zero.cmp_action()
 
             cmp.setup({
-                snippet = {
-                    expand = function(args)
-                        require('luasnip').lsp_expand(args.body)
-                    end
-                },
-                sources = {
-                    { name = 'nvim_lsp' },
-                    { name = 'nvim_lua' },
-                    { name = 'buffer' },
-                    { name = 'path' },
-                    { name = 'cmdline' },
-                    { name = 'luasnip' },
-                },
-                window = {
-                    completion = cmp.config.window.bordered(),
-                    documentation = cmp.config.window.bordered(),
-                },
                 mapping = cmp.mapping.preset.insert({
                     -- `Enter` key to confirm completion
                     ['<CR>'] = cmp.mapping.confirm({ select = false }),
@@ -104,16 +90,19 @@ return {
             })
         end,
         dependencies = {
-            { 'VonHeikemen/lsp-zero.nvim' },
-            { 'hrsh7th/cmp-nvim-lsp' },
-            { 'hrsh7th/cmp-buffer' },
-            { 'hrsh7th/cmp-path' },
-            { 'hrsh7th/cmp-cmdline' },
-            { 'hrsh7th/cmp-nvim-lua' },
+            -- LSP support
+            { 'neovim/nvim-lspconfig' },
 
-            -- Lua snip
-            { 'L3MON4D3/LuaSnip' },
-            { 'saadparwaiz1/cmp_luasnip' }
+            -- Telescope support
+            { 'nvim-telescope/telescope.nvim' },
+
+            -- Manson managament of LSP servers and configs
+            { 'williamboman/mason.nvim' },
+            { 'williamboman/mason-lspconfig.nvim' },
+
+            -- Autocompletion
+            { 'hrsh7th/nvim-cmp' },
+            { 'hrsh7th/cmp-nvim-lsp' },
         },
-    }
+    },
 }
