@@ -2,24 +2,23 @@ return {
     -- File search
     {
         'nvim-telescope/telescope.nvim',
-        tag = '0.1.5',
+        event = 'VimEnter',
         dependencies = { 'nvim-lua/plenary.nvim' },
+        opts = {},
         keys = function()
             local builtin = require('telescope.builtin')
 
-
-            local function telescope(mode, opts)
-                if mode == 'files' then
-                    mode = 'find_files'
-                end
-
-                return function()
-                    builtin[mode](opts)
-                end
-            end
-
             return {
-                { '<leader>pf', telescope('files') },
+                { '<leader>sh',       builtin.help_tags,   { desc = '[S]earch [H]elp' }, },
+                { '<leader>sk',       builtin.keymaps,     { desc = '[S]earch [K]eymaps' }, },
+                { '<leader>sf',       builtin.find_files,  { desc = '[S]earch [F]iles' }, },
+                { '<leader>ss',       builtin.builtin,     { desc = '[S]earch [S]elect Telescope' }, },
+                { '<leader>sw',       builtin.grep_string, { desc = '[S]earch current [W]ord' }, },
+                { '<leader>sg',       builtin.live_grep,   { desc = '[S]earch by [G]rep' }, },
+                { '<leader>sd',       builtin.diagnostics, { desc = '[S]earch [D]iagnostics' }, },
+                { '<leader>sr',       builtin.resume,      { desc = '[S]earch [R]esume' }, },
+                { '<leader>s.',       builtin.oldfiles,    { desc = '[S]earch Recent Files ("." for repeat)' }, },
+                { '<leader><leader>', builtin.buffers,     { desc = '[ ] Find existing buffers' }, },
             }
         end
     },
@@ -50,13 +49,13 @@ return {
         'nvim-tree/nvim-tree.lua',
         lazy = false,
         config = true,
-        dependenceis = {
+        dependencies = {
             'nvim-tree/nvim-web-devicons',
         },
         keys = {
-            { '<leader>tt', ':NvimTreeToggle<CR>', 'Toggle the file tree'},
-            { '<leader>tf', ':NvimTreeFocus<CR>', 'Focus on the file tree', },
-            { '<leader>tr', ':NvimTreeRefresh<CR>', 'Refresh the file tree' },
+            { '<leader>tt', '<cmd>NvimTreeToggle<CR>',  'Toggle the file tree' },
+            { '<leader>tf', '<cmd>NvimTreeFocus<CR>',   'Focus on the file tree', },
+            { '<leader>tr', '<cmd>NvimTreeRefresh<CR>', 'Refresh the file tree' },
         },
     },
 
@@ -65,9 +64,7 @@ return {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
         config = function()
-            local configs = require('nvim-treesitter.configs')
-
-            configs.setup({
+            require('nvim-treesitter.configs').setup({
                 ensure_installed = {
                     "c",
                     "lua",
@@ -78,7 +75,7 @@ return {
                     "css",
                     "rust",
                 },
-                sync_install = false,
+                auto_install = true,
                 highlight = { enable = true },
                 indent = { enable = true },
             })
@@ -89,7 +86,7 @@ return {
     {
         'nvim-lualine/lualine.nvim',
         dependencies = { 'nvim-tree/nvim-web-devicons' },
-        config = {
+        opts = {
             extensions = {
                 'lazy',
             },
@@ -104,7 +101,7 @@ return {
     -- Floating file name
     {
         'b0o/incline.nvim',
-        config = {
+        opts = {
             window = {
                 padding = 0,
                 margin = {
@@ -113,7 +110,6 @@ return {
                 },
             },
             render = function(props)
-                local helpers = require('incline.helpers')
                 local dev_icons = require('nvim-web-devicons')
 
                 local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
@@ -121,7 +117,7 @@ return {
                     filename = '[No Name]'
                 end
 
-                local ft_icon, ft_color = dev_icons.get_icon_color(filename)
+                local ft_icon, _ = dev_icons.get_icon_color(filename)
                 local modified = vim.bo[props.buf].modified
 
                 return {
@@ -144,4 +140,7 @@ return {
         end,
         config = true,
     },
+
+    -- Comment code using "gc"
+    { 'numToStr/Comment.nvim', opts = {} },
 }

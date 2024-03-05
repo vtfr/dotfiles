@@ -1,0 +1,7 @@
+import = ["~/.config/alacritty/rose-pine-moon.toml"]
+
+shell = "/usr/bin/zsh"
+
+[font]
+size = 16.0
+normal = { family = 'FiraCode Nerd Font', style = 'Regular' }
