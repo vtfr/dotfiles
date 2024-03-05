@@ -1,3 +1,3 @@
 # My dotfiles
 
-TODO
+My configurations

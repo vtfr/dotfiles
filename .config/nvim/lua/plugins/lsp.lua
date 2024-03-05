@@ -12,27 +12,41 @@ return {
     {
         'VonHeikemen/lsp-zero.nvim',
         branch = 'v3.x',
+        lazy = true,
         config = function()
             local lsp_zero = require('lsp-zero')
 
             lsp_zero.on_attach(function(_, bufnr)
-                local opts = { buffer = bufnr }
+                lsp_zero.default_keymaps({ buffer = bufnr })
 
-                lsp_zero.default_keymaps(opts)
+                local function map(keys, func, desc)
+                    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc })
+                end
 
-                vim.keymap.set({ 'n', 'x' }, '<leader>f', function()
+                -- ============================================================
+                -- Telescope integration
+                -- ============================================================
+                local telescope = require('telescope.builtin')
+
+                map('gd', telescope.lsp_definitions, '[G]oto [D]efinition')
+                map('gr', telescope.lsp_references, '[G]oto [R]eferences')
+                map('gI', telescope.lsp_implementations, '[G]oto [I]mplementation')
+                map('<leader>D', telescope.lsp_type_definitions, 'Type [D]efinition')
+                map('<leader>ds', telescope.lsp_document_symbols, '[D]ocument [S]ymbols')
+                map('<leader>ws', telescope.lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+
+                -- ============================================================
+                -- Autoformat
+                -- ============================================================
+                map('<leader>f', function()
                     vim.lsp.buf.format({ async = false })
-                end, opts)
+                end, '[F]ormat file')
             end)
 
-            lsp_zero.format_on_save()
-            lsp_zero.set_sign_icons({
-                error = '✘',
-                warn = '▲',
-                hint = '⚑',
-                info = '»',
-            })
-
+            -- ================================================================
+            -- Mason configuration
+            -- ================================================================
+            require('mason').setup({})
             require('mason-lspconfig').setup({
                 ensure_installed = {
                     'rust_analyzer',
@@ -42,19 +56,15 @@ return {
                 },
                 handlers = {
                     lsp_zero.default_setup,
-
-                    -- Configure Lua to include the current workspace.
-                    ['lua_ls'] = function()
-                        local opts = lsp_zero.nvim_lua_ls()
-
-                        require('lspconfig').lua_ls.setup(opts)
-                    end
-                }
+                },
             })
         end,
         dependencies = {
             -- LSP support
             { 'neovim/nvim-lspconfig' },
+
+            -- Telescope support
+            { 'nvim-telescope/telescope.nvim' },
 
             -- Manson managament of LSP servers and configs
             { 'williamboman/mason.nvim' },
